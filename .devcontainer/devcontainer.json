@@ -1,0 +1,26 @@
+{
+  "name": "snail",
+  "build": {
+    "dockerfile": "../Dockerfile"
+  },
+  "runArgs": [
+    "--net=host",
+    "--ipc=host",
+    "--privileged",
+    "-e", "DISPLAY=${env:DISPLAY}",
+    "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+  ],
+  "workspaceFolder": "/snail_ws",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/snail_ws,type=bind",
+  "remoteUser": "root",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-iot.vscode-ros",
+        "twxs.cmake",
+        "ms-vscode.cpptools"
+      ]
+    }
+  }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    Gazebo Harmonic plugin loading.
+    The gz_ros2_control plugin reads controllers.yaml and instantiates the ros2_control
+    SystemInterface declared in snail.ros2_control.xacro.
+  -->
+
+  <gazebo>
+    <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>$(arg controllers_config)</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- Per-link friction tuning. Hoverboard tyres are rubber on hard ground. -->
+  <gazebo reference="front_left_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1e6</kp>
+    <kd>1.0</kd>
+  </gazebo>
+
+  <gazebo reference="front_right_wheel_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+    <kp>1e6</kp>
+    <kd>1.0</kd>
+  </gazebo>
+
+  <gazebo reference="rear_wheel_link">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <kp>1e6</kp>
+    <kd>1.0</kd>
+  </gazebo>
+
+  <gazebo reference="chassis_link">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+  </gazebo>
+
+</robot>

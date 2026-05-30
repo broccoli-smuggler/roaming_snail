@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!--
+    ros2_control system definition.
+    The hardware plugin switches based on the `use_sim` xacro arg:
+      - sim:      gz_ros2_control/GazeboSimSystem (provided)
+      - hardware: snail_vesc/SnailVescSystem      (this repo; not yet implemented)
+
+    Joints exposed:
+      - front_left_wheel_joint   velocity   (driven)
+      - front_right_wheel_joint  velocity   (driven; on hardware, broadcast same command)
+      - rear_steer_joint         position   (steering hub)
+
+    The rear_wheel_joint is free-spinning and not exposed to ros2_control.
+  -->
+
+  <ros2_control name="snail_ros2_control" type="system">
+    <hardware>
+      <xacro:if value="$(arg use_sim)">
+        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+      </xacro:if>
+      <xacro:unless value="$(arg use_sim)">
+        <plugin>snail_vesc/SnailVescSystem</plugin>
+        <param name="can_interface">can0</param>
+        <param name="drive_vesc_ids">1,2,3,4</param>
+        <param name="steer_vesc_id">5</param>
+      </xacro:unless>
+    </hardware>
+
+    <joint name="front_left_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+
+    <joint name="front_right_wheel_joint">
+      <command_interface name="velocity"/>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+
+    <joint name="rear_steer_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+</robot>

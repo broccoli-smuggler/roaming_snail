@@ -1,0 +1,31 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100  # Hz
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    snail_steering_controller:
+      type: tricycle_steering_controller/TricycleSteeringController
+
+
+snail_steering_controller:
+  ros__parameters:
+    reference_timeout: 1.0          # Stop if no /cmd_vel for 1 s
+    open_loop: false
+    velocity_rolling_window_size: 10
+
+    base_frame_id: base_link
+    odom_frame_id: odom
+    enable_odom_tf: true
+
+    # Joint wiring — first list is driven, second is steered (front-drive, rear-steer)
+    traction_joints_names: [front_left_wheel_joint, front_right_wheel_joint]
+    steering_joints_names: [rear_steer_joint]
+
+    # Geometry — matches snail.urdf.xacro
+    wheelbase: 1.60                 # Front axle to rear axle (m)
+    traction_track_width: 0.60      # Distance between the two driven front wheels (m)
+    traction_wheels_radius: 0.19    # Driven wheels only (Ø 38 cm)
+
+    use_stamped_vel: false          # Accept unstamped geometry_msgs/Twist on /cmd_vel

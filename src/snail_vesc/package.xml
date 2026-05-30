@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>snail_vesc</name>
+  <version>0.0.1</version>
+  <description>ros2_control hardware_interface plugin for VESC controllers over SocketCAN.</description>
+  <maintainer email="joshua@roboat.tech">Joshua</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_lifecycle</depend>
+
+  <exec_depend>python3-can</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <!-- Pluginlib export will be added when the SystemInterface plugin is implemented:
+    <hardware_interface plugin="${prefix}/plugin_description.xml"/>
+    -->
+  </export>
+</package>
