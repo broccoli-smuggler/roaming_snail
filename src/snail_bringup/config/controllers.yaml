@@ -28,4 +28,4 @@ snail_steering_controller:
     traction_track_width: 0.60      # Distance between the two driven front wheels (m)
     traction_wheels_radius: 0.19    # Driven wheels only (Ø 38 cm)
 
-    use_stamped_vel: false          # Accept unstamped geometry_msgs/Twist on /cmd_vel
+    use_stamped_vel: true

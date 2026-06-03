@@ -10,6 +10,19 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+
+ament_python_install_package(${PROJECT_NAME})
+
+install(PROGRAMS snail_vesc/vesc_node.py
+  RENAME vesc_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_pytest REQUIRED)
+  ament_add_pytest_test(test_vesc_protocol test/test_vesc_protocol.py)
+endif()
 
 # Pluginlib SystemInterface implementation lands here:
 #   find_package(hardware_interface REQUIRED)

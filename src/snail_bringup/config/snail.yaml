@@ -1,0 +1,16 @@
+/**:
+  ros__parameters:
+    teleop: keyboard
+
+    joystick:
+      dev: /dev/input/js0
+
+    vesc:
+      can_interface: can0
+      drive_ids: [1, 2, 3, 4]
+      steer_id: 5
+      pole_pairs: 7
+      wheelbase: 1.60
+      wheel_radius: 0.19
+      maximum_steering_degrees: 60.0
+      steering_gear_ratio: 1.0       # motor shaft degrees per steering degree — tune at bringup

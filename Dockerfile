@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       ros-${ROS_DISTRO}-ros2-control \
       ros-${ROS_DISTRO}-ros2-controllers \
       ros-${ROS_DISTRO}-teleop-twist-keyboard \
+      xterm \
       ros-${ROS_DISTRO}-xacro \
       ros-${ROS_DISTRO}-robot-state-publisher \
       ros-${ROS_DISTRO}-joint-state-publisher \
@@ -35,4 +36,8 @@ WORKDIR /snail_ws
 RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /root/.bashrc \
  && echo '[ -f /snail_ws/install/setup.bash ] && source /snail_ws/install/setup.bash' >> /root/.bashrc
 
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]

@@ -8,7 +8,9 @@
     "--ipc=host",
     "--privileged",
     "-e", "DISPLAY=${env:DISPLAY}",
-    "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
+    "-e", "XAUTHORITY=/root/.Xauthority",
+    "-v", "/tmp/.X11-unix:/tmp/.X11-unix",
+    "-v", "${env:HOME}/.Xauthority:/root/.Xauthority:ro"
   ],
   "workspaceFolder": "/snail_ws",
   "workspaceMount": "source=${localWorkspaceFolder},target=/snail_ws,type=bind",

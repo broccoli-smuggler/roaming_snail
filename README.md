@@ -1,43 +1,66 @@
 # Snail
 
-Remote-controlled kart. ROS2 Jazzy, Gazebo Harmonic, ros2_control.
+Remote-controlled go-kart. ROS2 Jazzy, Gazebo Harmonic, ros2_control.
 
-- 1 drive wheel (4 VESC motor controllers on CAN, broadcast)
-- 1 steered wheel (1 VESC, position controlled, limit-switch homing)
-- Bicycle kinematics, rear-steered
+- 4 drive motors (hoverboard hub motors, VESC IDs 1–4 on CAN, all get the same eRPM — passive diff handles the rest)
+- 1 steering motor (VESC ID 5, position controlled)
+- Rear-steered tricycle kinematics
 
 ## Quick start (sim)
 
 ```bash
-# Build inside devcontainer
-colcon build --symlink-install
-source install/setup.bash
+# Build image once (or after Dockerfile changes)
+docker buildx build -t snail:latest .
 
-# Bring up Gazebo + controllers
-ros2 launch snail_bringup snail.launch.py sim:=true
+# Launch sim — builds workspace automatically on first run
+./docker/run.sh ros2 launch snail_bringup sim.launch.py
+```
 
-# In another terminal: drive
-ros2 run teleop_twist_keyboard teleop_twist_keyboard
+An xterm window opens for keyboard teleop. Click it to give focus, then use the standard `teleop_twist_keyboard` keys.
+
+To get a shell inside the running container:
+
+```bash
+docker exec -it snail bash
 ```
 
 ## Workspace layout
 
 | Package | Purpose |
 |---|---|
-| `snail_description` | URDF (xacro) + ros2_control tags |
-| `snail_bringup` | Top-level launch + config (YAML-driven) |
-| `snail_vesc` | Hardware interface plugin (SocketCAN → VESCs) |
-| `snail_teleop` | Input devices |
-| `snail_gz` | Gazebo worlds + spawn launch |
+| `snail_description` | URDF (xacro), ros2_control tags, Gazebo plugin |
+| `snail_bringup` | Launch files, all tunable config in `config/snail.yaml` |
+| `snail_vesc` | CAN protocol library + ROS2 node (sim: logs frames, real: sends over SocketCAN) |
+| `snail_gz` | Gazebo world |
 
-Uses stock messages only: `geometry_msgs/Twist`, `sensor_msgs/JointState`, `std_msgs/Float32`.
+## Configuration
+
+All hardware parameters are in `src/snail_bringup/config/snail.yaml`:
+
+```yaml
+vesc:
+  can_interface: can0
+  drive_ids: [1, 2, 3, 4]
+  steer_id: 5
+  pole_pairs: 7           # electrical pole pairs of the drive motors
+  wheelbase: 1.60         # metres
+  wheel_radius: 0.19      # metres
+  maximum_steering_degrees: 60.0
+  steering_gear_ratio: 1.0  # motor shaft degrees per steering degree — measure at bringup
+```
+
+Teleop mode (`keyboard` or `joy`) is also set in `snail.yaml`.
 
 ## Hardware
 
-- Raspberry Pi 5 (Ubuntu 24.04)
-- Waveshare 2-CH CAN HAT (MCP2515)
-- 5x VESC controllers on CAN bus @ 500kbps
-- 4x hoverboard hub motors (drive), 1x hub motor (steer)
-- 48V system, physical inline E-Stop relay
+- Raspberry Pi 5 (Ubuntu 24.04 / ROS2 Jazzy)
+- Waveshare 2-CH CAN HAT (MCP2515) @ 500 kbps
+- 5× VESC controllers
+- 4× hoverboard hub motors (drive), 1× hub motor (steer)
+- 48 V system, physical inline E-Stop relay
 
-See `docs/` for design notes.
+To bring up the virtual CAN interface on the host before running in hardware mode:
+
+```bash
+./docker/setup_vcan.sh   # vcan0 for testing without physical hardware
+```
